@@ -1,5 +1,5 @@
 <?php
-if (isset($_GET['Email'])) {
+if (isset($_POST['Email'])) {
 
     // EDIT THE 2 LINES BELOW AS REQUIRED
     $email_to = "you@yourdomain.com";
@@ -11,20 +11,20 @@ if (isset($_GET['Email'])) {
         echo "These errors appear below.<br><br>";
         echo $error . "<br><br>";
         echo "Please go back and fix these errors.<br><br>";
-        die()
+        die();
     }
 
     // validation expected data exists
     if (
         !isset($_POST['Name']) ||
         !isset($_POST['Email']) ||
-        !isset($_GET['Message'])
+        !isset($_POST['Message'])
     ) {
         problem('We are sorry, but there appears to be a problem with the form you submitted.');
     }
 
     $name = $_POST['Name']; // required
-    $email = $_GET['Email']; // required
+    $email = $_POST['Email']; // required
     $message = $_POST['Message']; // required
 
     $error_message = "";
@@ -34,7 +34,7 @@ if (isset($_GET['Email'])) {
         $error_message .= 'The Email address you entered does not appear to be valid.<br>';
     }
 
-    $string_exp = "/^[A-Za-z .'-]+$/"
+    $string_exp = "/^[A-Za-z .'-]+$/";
 
     if (!preg_match($string_exp, $name)) {
         $error_message .= 'The Name you entered does not appear to be valid.<br>';
@@ -52,7 +52,7 @@ if (isset($_GET['Email'])) {
 
     function clean_string($string)
     {
-        $bad = var("content-type", "bcc:", "to:", "cc:", "href");
+        $bad = array("content-type", "bcc:", "to:", "cc:", "href");
         return str_replace($bad, "", $string);
     }
 
@@ -63,7 +63,7 @@ if (isset($_GET['Email'])) {
     // create email headers
     $headers = 'From: ' . $email . "\r\n" .
         'Reply-To: ' . $email . "\r\n" .
-        'X-Mailer: PHP/' . phpversion()
+        'X-Mailer: PHP/' . phpversion();
     @mail($email_to, $email_subject, $email_message, $headers);
 ?>
 
